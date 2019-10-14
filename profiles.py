@@ -1,4 +1,3 @@
-import math
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib import ticker, cm
@@ -21,22 +20,22 @@ def plasmaDensity(r, phi):
 
 file = open('Test.txt', 'w')
 
-x = np.arange(20, 150, 1)
+xMagnetic = np.arange(20, 150, 1)
 xPlasma = np.arange(5, 30, 1)
-y = np.arange(0, 2 * np.pi + 0.03, 0.05)
+phi = np.arange(0, 2 * np.pi + 0.03, 0.05)
 
-xp, yp = np.meshgrid(xPlasma, y)
+xp, phip = np.meshgrid(xPlasma, phi)
+xi, phii = np.meshgrid(xMagnetic, phi)
 
-xi, yi = np.meshgrid(x, y)
-B = np.array(equatorialMagneticField(xi, yi))
-N = np.array(plasmaDensity(xp, yp))
+B = np.array(equatorialMagneticField(xi, phii))
+N = np.array(plasmaDensity(xp, phip))
 # z = gaussian_filter(z,4,mode='nearest')
 
-xi = x * np.cos(yi)
-yi = x * np.sin(yi)
+xi = xMagnetic * np.cos(phii)
+yi = xMagnetic * np.sin(phii)
 
-xp = xPlasma * np.cos(yp)
-yp = xPlasma * np.sin(yp)
+xp = xPlasma * np.cos(phip)
+yp = xPlasma * np.sin(phip)
 
 # Plotting
 '''plt.subplot(211)
