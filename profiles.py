@@ -18,7 +18,7 @@ def plasmaDensity(r, phi):
     return N
 
 
-file = open('Test.txt', 'w')
+#file = open('Test.txt', 'w')
 
 xMagnetic = np.arange(20, 150, 1)
 xPlasma = np.arange(5, 30, 1)
@@ -36,6 +36,10 @@ yi = xMagnetic * np.sin(phii)
 
 xp = xPlasma * np.cos(phip)
 yp = xPlasma * np.sin(phip)
+
+np.savetxt('test.txt', (xi))
+
+print(xi.shape)
 
 # Plotting
 '''plt.subplot(211)
@@ -57,7 +61,16 @@ plt.text(60, -70, r'$\rightarrow$ To the Sun')
 heatmap = plt.contourf(xp, yp, N, locator=ticker.LogLocator(), cmap=plt.cm.get_cmap('gist_rainbow'), alpha=0.4)
 lines = plt.contour(xp, yp, N, 5, colors='k')
 plt.clabel(lines, fontsize=18, inline=1, colors='k')
+#plt.plot(xp,yp,'k.')
 clb = plt.colorbar(heatmap)
 plt.tight_layout()
-plt.show()
-#plt.savefig('test.pdf', bbox_inches='tight')
+clb.ax.set_title(r'$\rho$ (cm$^{-3}$)', fontsize=18)
+plt.title('Plasma density of Plasma sheet', fontsize=18)
+plt.rcParams['xtick.labelsize'] = 18
+plt.rcParams['ytick.labelsize'] = 18
+plt.xlabel('x $(R_J)$', fontsize=18)
+plt.ylabel('y $(R_J)$', fontsize=18)
+plt.xticks(size=18)
+plt.yticks(size=18)
+plt.text(10, -10, r'$\rightarrow$ To the Sun')
+plt.savefig('plasmaDensity.pdf', bbox_inches='tight')
