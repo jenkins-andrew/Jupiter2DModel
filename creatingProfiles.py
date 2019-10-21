@@ -16,6 +16,16 @@ def plasmaDensity(r, phi):
     N = 1987 * (r / 6) ** (-8.2) + 14 * (r / 6) ** (-3.2) + 0.05 * (r / 6) ** (-0.65)
     return N
 
+
+def alfvenVelocityFunc(b, rho):
+    Va = b / np.sqrt(1.25663706212e-6 * rho * 1e6)
+    return Va
+
+
+def corotationVelocityFunc(x, y):
+    v = (2*np.pi/36000) * np.sqrt(x**2 + y**2)
+    return v
+
 x = []
 y = []
 b = []
@@ -28,5 +38,22 @@ for r in np.arange(1, 150, 1):
         b.append(equatorialMagneticField(r, phi))
         p.append(plasmaDensity(r, phi))
 
-np.savetxt('npout.txt',np.c_[x,y,b,p], delimiter='\t', header='x\ty\tb\tp')
+np.savetxt('npout.txt', np.c_[x, y, b, p], delimiter='\t', header='x\ty\tb\tp')
 
+
+alfvenVelocity = []
+corotationVelocity = []
+
+for i in range(len(x)):
+    alfvenVelocity.append(alfvenVelocityFunc(b[i], p[i]))
+    corotationVelocity.append(corotationVelocityFunc(x[i], y[i]))
+
+corotationcheck = []
+
+for i in range(len(alfvenVelocity)):
+    if alfvenVelocity[i] > corotationVelocity[i]:
+        corotationcheck.append(0)
+    else:
+        corotationcheck.append(1)
+
+np.savetxt('alfvenCheck.txt', np.c_[x, y, alfvenVelocity, corotationcheck], delimiter='\t', header='x\ty\tAlfven\tCheck')
