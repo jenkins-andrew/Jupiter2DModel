@@ -21,7 +21,7 @@ def plasmaDensity(r, phi):
 #file = open('Test.txt', 'w')
 
 xMagnetic = np.arange(20, 150, 1)
-xPlasma = np.arange(5, 30, 1)
+xPlasma = np.arange(6, 100, 1)
 phi = np.arange(0, 2 * np.pi + 0.03, 0.05)
 
 xp, phip = np.meshgrid(xPlasma, phi)
