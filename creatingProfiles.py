@@ -5,7 +5,6 @@ from scipy.ndimage.filters import gaussian_filter
 from scipy.interpolate import griddata
 from scipy import interpolate
 
-
 def equatorialMagneticField(r, phi):
     B = 1.030e6 * r ** (-3.756 - 0.12 * np.cos(phi - 3.562)) + \
         (3.797 - 4.612 * np.cos(phi - 0.825) + 0.606 * np.cos(2 * (phi - 0.473)) +
@@ -30,3 +29,4 @@ for r in np.arange(1, 150, 1):
         p.append(plasmaDensity(r, phi))
 
 np.savetxt('npout.txt',np.c_[x,y,b,p], delimiter='\t', header='x\ty\tb\tp')
+

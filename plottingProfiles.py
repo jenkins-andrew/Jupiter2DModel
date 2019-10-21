@@ -1,9 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from matplotlib import ticker, cm
-from scipy.ndimage.filters import gaussian_filter
 from scipy.interpolate import griddata
-from scipy import interpolate
 
 x,y,b,p = np.loadtxt('npout.txt', delimiter='\t', unpack=True)
 
