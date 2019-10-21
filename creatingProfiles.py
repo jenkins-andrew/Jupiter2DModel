@@ -18,7 +18,7 @@ def plasmaDensity(r, phi):
 
 
 def alfvenVelocityFunc(b, rho):
-    Va = b / np.sqrt(1.25663706212e-6 * rho * 1e6)
+    Va = b * 1e-9 / np.sqrt(1.25663706212e-6 * rho * 1e6 * 1.67e-27)
     return Va
 
 
@@ -38,8 +38,6 @@ for r in np.arange(1, 150, 1):
         b.append(equatorialMagneticField(r, phi))
         p.append(plasmaDensity(r, phi))
 
-np.savetxt('npout.txt', np.c_[x, y, b, p], delimiter='\t', header='x\ty\tb\tp')
-
 
 alfvenVelocity = []
 corotationVelocity = []
@@ -56,4 +54,4 @@ for i in range(len(alfvenVelocity)):
     else:
         corotationcheck.append(1)
 
-np.savetxt('alfvenCheck.txt', np.c_[x, y, alfvenVelocity, corotationcheck], delimiter='\t', header='x\ty\tAlfven\tCheck')
+np.savetxt('alfvenCheck.txt', np.c_[x, y,  b, p, alfvenVelocity, corotationVelocity, corotationcheck], delimiter='\t', header='x\ty\tb\tp\tAlfven\tCorotation\tCheck')
