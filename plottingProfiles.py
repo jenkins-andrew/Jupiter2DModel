@@ -60,9 +60,11 @@ p = np.array(p)
 
 xtest = np.arange(-100, 100, 1)
 ytest = np.arange(-100, 100, 1)
-mask = (xtest > 20) & (xtest < -20) & (ytest > 20) & (ytest < -20)
 
-Z = griddata((x, y), b, (xtest[None, :], ytest[:, None]), method='linear')
+xtest, ytest = np.meshgrid(xtest, ytest)
+
+mask = (np.sqrt(xtest**2 + ytest**2) < 20)
+Z = griddata((x, y), b, (xtest, ytest), method='linear')
 Z[mask] = np.nan
 
 # plt.subplot(211)
