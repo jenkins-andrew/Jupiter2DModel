@@ -23,6 +23,8 @@ def alfvenVelocityFunc(b, rho):
 
 
 def corotationVelocityFunc(x, y):
+    x = x*69911e3
+    y = y*69911e3
     v = (2*np.pi/36000) * np.sqrt(x**2 + y**2)
     return v
 

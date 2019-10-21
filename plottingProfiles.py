@@ -1,6 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.interpolate import griddata
+from matplotlib import colors
 
 # Loading the data
 x, y, b, p, alfvenVelocity, corotation, corotationcheck= np.loadtxt('alfvenCheck.txt', delimiter='\t', unpack=True)
@@ -57,8 +58,19 @@ PGrid[mask] = np.nan
 # plt.tight_layout(pad=1)
 # plt.savefig('contourwithmask.pdf', bbox_inches='tight')
 
+cmap = colors.ListedColormap(['red', '#ffffff'])
+boundaries = [0, 1]
+norm = colors.BoundaryNorm(boundaries, cmap.N, clip=True)
+
 CheckGrid = griddata((x, y), corotationcheck, (xtest, ytest), method='linear')
 CheckGrid[mask] = np.nan
 
-plt.contourf(xtest, ytest, CheckGrid)
+# heatmap = plt.contour(xtest, ytest, CheckGrid, cmap=cmap)
+lines = plt.contour(xtest, ytest, CheckGrid, 1, colors='k')
+plt.xlabel('x $(R_J)$', fontsize=18)
+plt.ylabel('y $(R_J)$', fontsize=18)
+plt.xticks(size=18)
+plt.yticks(size=18)
+plt.text(10, -70, r'$\rightarrow$ To the Sun')
+plt.tight_layout()
 plt.show()
