@@ -4,7 +4,7 @@ from scipy.interpolate import griddata
 from matplotlib import colors
 
 # Loading the data
-x, y, b, p, alfvenVelocity, corotation, corotationcheck= np.loadtxt('alfvenCheck.txt', delimiter='\t', unpack=True)
+x, y, b, p, alfvenVelocity, corotation, corotationcheck = np.loadtxt('alfvenCheck.txt', delimiter='\t', unpack=True)
 
 # Creating grid
 xtest = np.arange(-100, 101, 1)
@@ -65,12 +65,24 @@ norm = colors.BoundaryNorm(boundaries, cmap.N, clip=True)
 CheckGrid = griddata((x, y), corotationcheck, (xtest, ytest), method='linear')
 CheckGrid[mask] = np.nan
 
-# heatmap = plt.contour(xtest, ytest, CheckGrid, cmap=cmap)
-lines = plt.contour(xtest, ytest, CheckGrid, 1, colors='k')
-plt.xlabel('x $(R_J)$', fontsize=18)
-plt.ylabel('y $(R_J)$', fontsize=18)
+alfvenmask = (alfvenVelocity > 0.95*corotation) & (alfvenVelocity < 1.05*corotation)
+
+r = np.sqrt(x ** 2 + y ** 2)
+phiwrong = np.arctan2(x, y)
+phi = np.mod(phiwrong, 2*np.pi) * 180 / np.pi
+plt.scatter(phi[alfvenmask], r[alfvenmask], s=0.1, color='k')
+plt.xlabel('Angle (Degrees)', fontsize=18)
+plt.ylabel('Radius (R$_J)$', fontsize=18)
 plt.xticks(size=18)
 plt.yticks(size=18)
-plt.text(10, -70, r'$\rightarrow$ To the Sun')
 plt.tight_layout()
+
+# heatmap = plt.contour(xtest, ytest, CheckGrid, cmap=cmap)
+# lines = plt.contour(xtest, ytest, CheckGrid, 1, colors='k')
+# plt.xlabel('x $(R_J)$', fontsize=18)
+# plt.ylabel('y $(R_J)$', fontsize=18)
+# plt.xticks(size=18)
+# plt.yticks(size=18)
+# plt.text(10, -70, r'$\rightarrow$ To the Sun')
+# plt.tight_layout()
 plt.show()
