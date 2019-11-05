@@ -34,7 +34,7 @@ def corotationVelocityFunc(x, y):
     v = (2*np.pi/36000) * np.sqrt(x**2 + y**2)
     return v
 
-def scaleHeight(r):
+def radialScaleHeight(r):
     h = -0.116 + 2.14*np.log10(r) - 2.05*np.log10(r)**2 + 0.491*np.log10(r)**3 + 0.126*np.log10(r)**4
     H = 10 ** h
     return H
@@ -44,8 +44,12 @@ x = []
 y = []
 b = []
 p = []
+scaleHeight = []
+radius = []
 
 for r in np.arange(1, 150, 1):
+    radius.append(r)
+    scaleHeight.append(radialScaleHeight(r))
     for phi in np.arange(0, 2 * np.pi + 0.03, 0.05):
         x.append(r * np.cos(phi))
         y.append(r * np.sin(phi))
@@ -68,3 +72,4 @@ for i in range(len(alfvenVelocity)):
         corotationcheck.append(1)
 
 np.savetxt('alfvenCheck.txt', np.c_[x, y,  b, p, alfvenVelocity, corotationVelocity, corotationcheck], delimiter='\t', header='x\ty\tb\tp\tAlfven\tCorotation\tCheck')
+np.savetxt('scaleheighttest.txt', np.c_[radius, scaleHeight], delimiter='\t', header='r\tscaleHeight')
