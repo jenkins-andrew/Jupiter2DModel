@@ -8,8 +8,8 @@ from scipy import interpolate
 def equatorialMagneticField(r, phi):
     """
     Finds the equatorial magnetic field strength using Vogt et. all 2011 method
-    :param r: The radius
-    :param phi: The angle
+    :param r: The radius in R_J
+    :param phi: The angle in radians, 0 at the Sun, anti-clockwise
     :return: The equatorial magnetic field
     """
     B = 1.030e6 * r ** (-3.756 - 0.12 * np.cos(phi - 3.562)) + \
@@ -19,11 +19,23 @@ def equatorialMagneticField(r, phi):
 
 
 def plasmaDensity(r, phi):
+    """
+    Calculates the plasma density at the equator using the method from Bagenal 2011
+    :param r: The radius in R_J
+    :param phi: The angle in radians, 0 at the Sun, anti-clockwise
+    :return: The plasma number density at the equator
+    """
     N = 1987 * (r / 6) ** (-8.2) + 14 * (r / 6) ** (-3.2) + 0.05 * (r / 6) ** (-0.65)
     return N
 
 
 def alfvenVelocityFunc(b, rho):
+    """
+
+    :param b:
+    :param rho:
+    :return:
+    """
     Va = b * 1e-9 / np.sqrt(1.25663706212e-6 * rho * 1e6 * 1.67e-27)
     return Va
 
