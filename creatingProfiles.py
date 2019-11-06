@@ -1,9 +1,10 @@
 import numpy as np
-import matplotlib.pyplot as plt
-from matplotlib import ticker, cm
-from scipy.ndimage.filters import gaussian_filter
-from scipy.interpolate import griddata
-from scipy import interpolate
+# import matplotlib.pyplot as plt
+# # from matplotlib import ticker, cm
+# # from scipy.ndimage.filters import gaussian_filter
+# # from scipy.interpolate import griddata
+# # from scipy import interpolate
+
 
 def equatorialMagneticField(r, phi):
     """
@@ -36,17 +37,27 @@ def alfvenVelocityFunc(b, numberDensity):
     :param numberDensity:
     :return:
     """
-    Va = b * 1e-9 / np.sqrt(1.25663706212e-6 * numberDensity * 1e6 * 1.67e-27)
+    Va = b * 1e-9 / np.sqrt(1.25663706212e-6 * numberDensity * 1e6 * 20 * 1.67e-27)
     return Va
 
 
 def corotationVelocityFunc(x, y):
-    x = x*69911e3
-    y = y*69911e3
-    v = (2*np.pi/36000) * np.sqrt(x**2 + y**2)
+    """
+
+    :param x:
+    :param y:
+    :return:
+    """
+    v = (2*np.pi/36000) * np.sqrt(x**2 + y**2) * 69911e3
     return v
 
+
 def radialScaleHeight(r):
+    """
+
+    :param r:
+    :return:
+    """
     h = -0.116 + 2.14*np.log10(r/6) - 2.05*np.log10(r/6)**2 + 0.491*np.log10(r/6)**3 + 0.126*np.log10(r/6)**4
     H = 10 ** h
     return H
@@ -59,7 +70,7 @@ p = []
 scaleHeight = []
 radius = []
 
-for r in np.arange(1, 150, 1):
+for r in np.arange(1, 150, 0.5):
     radius.append(r)
     scaleHeight.append(radialScaleHeight(r))
     for phi in np.arange(0, 2 * np.pi + 0.03, 0.05):
