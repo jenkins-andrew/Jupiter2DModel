@@ -18,7 +18,7 @@ def equatorialMagneticField(r, phi):
     return B
 
 
-def plasmaDensity(r, phi):
+def plasmaNumberDensity(r, phi):
     """
     Calculates the plasma density at the equator using the method from Bagenal 2011
     :param r: The radius in R_J
@@ -47,7 +47,7 @@ def corotationVelocityFunc(x, y):
     return v
 
 def radialScaleHeight(r):
-    h = -0.116 + 2.14*np.log10(r) - 2.05*np.log10(r)**2 + 0.491*np.log10(r)**3 + 0.126*np.log10(r)**4
+    h = -0.116 + 2.14*np.log10(r/6) - 2.05*np.log10(r/6)**2 + 0.491*np.log10(r/6)**3 + 0.126*np.log10(r/6)**4
     H = 10 ** h
     return H
 
@@ -66,7 +66,7 @@ for r in np.arange(1, 150, 1):
         x.append(r * np.cos(phi))
         y.append(r * np.sin(phi))
         b.append(equatorialMagneticField(r, phi))
-        p.append(plasmaDensity(r, phi))
+        p.append(plasmaNumberDensity(r, phi))
 
 alfvenVelocity = []
 corotationVelocity = []
