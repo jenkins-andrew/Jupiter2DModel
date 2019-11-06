@@ -29,14 +29,14 @@ def plasmaDensity(r, phi):
     return N
 
 
-def alfvenVelocityFunc(b, rho):
+def alfvenVelocityFunc(b, numberDensity):
     """
 
     :param b:
-    :param rho:
+    :param numberDensity:
     :return:
     """
-    Va = b * 1e-9 / np.sqrt(1.25663706212e-6 * rho * 1e6 * 1.67e-27)
+    Va = b * 1e-9 / np.sqrt(1.25663706212e-6 * numberDensity * 1e6 * 1.67e-27)
     return Va
 
 
