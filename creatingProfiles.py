@@ -42,7 +42,7 @@ def corotationVelocityFunc(x, y):
     :param y: In R_J
     :return: The corotation velocity assuming 10 hr rotation period in m/s
     """
-    v = (2*np.pi/36000) * np.sqrt(x**2 + y**2) * 69911e3
+    v = (2*np.pi/36000) * np.sqrt(x**2 + y**2) * 71492e3
     return v
 
 
