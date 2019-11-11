@@ -13,8 +13,9 @@ xtest, ytest = np.meshgrid(xtest, ytest)
 
 DensityGrid = griddata((r, z), plasmaDensity, (xtest, ytest))
 
-
 plt.figure()
+plt.rcParams['xtick.labelsize'] = 18
+plt.rcParams['ytick.labelsize'] = 18
 heatmap = plt.contourf(xtest, ytest, DensityGrid, cmap=plt.cm.get_cmap('gist_rainbow'), locator=ticker.LogLocator(), alpha=0.4)
 plt.contour(xtest, ytest, DensityGrid, 1, colors='k')
 clb = plt.colorbar(heatmap)
@@ -24,8 +25,5 @@ plt.ylabel('Z $(R_J)$', fontsize=18)
 plt.xticks(size=18)
 plt.yticks(size=18)
 plt.tight_layout()
-
-plt.figure()
-
 
 plt.show()
