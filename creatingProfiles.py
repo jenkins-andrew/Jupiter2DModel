@@ -57,9 +57,22 @@ def radialScaleHeight(r):
     return H
 
 
+def densityAtZFromEquator(z, numberDensity, scaleHeight):
+    """
+
+    :param z:
+    :param numberDensity:
+    :param scaleHeight:
+    :return:
+    """
+    nZ = numberDensity * np.exp(-1*(z/scaleHeight))
+    return nZ
+
+
 # Create a series of arrays to hold values
 x = []
 y = []
+zInRJ = []
 equatorialMagField = []
 numberDensity = []
 scaleHeight = []
@@ -67,6 +80,8 @@ radius = []
 alfvenVelocity = []
 corotationVelocity = []
 corotationcheck = []
+plasmaZDensity = []
+radiusForZDensity = []
 
 # Calculate radius, scale height, x, y, equatorial magnetic field and number density by iterating over radius and angle
 for r in np.arange(1, 150, 0.5):
@@ -91,7 +106,15 @@ for i in range(len(alfvenVelocity)):
     else:
         corotationcheck.append(1)
 
+for z in np.arange(0, 5, 0.1):
+    for r in np.arange(6, 100, 0.5):
+        radiusForZDensity.append(r)
+        zInRJ.append(z)
+        plasmaZDensity.append(densityAtZFromEquator(z, plasmaNumberDensity(r, 0), radialScaleHeight(r)))
+
 # Save outputs
 np.savetxt('alfvenCheck.txt', np.c_[x, y, equatorialMagField, numberDensity, alfvenVelocity, corotationVelocity,
                                     corotationcheck], delimiter='\t', header='x\ty\tb\tp\tAlfven\tCorotation\tCheck')
 np.savetxt('scaleheighttest.txt', np.c_[radius, scaleHeight], delimiter='\t', header='r\tscaleHeight')
+
+np.savetxt('zPlasmaDensity.txt', np.c_[radiusForZDensity, zInRJ, plasmaZDensity], delimiter='\t', header='r\tz\tplasmaZDensity')
