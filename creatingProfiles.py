@@ -65,7 +65,7 @@ def densityAtZFromEquator(z, numberDensity, scaleHeight):
     :param scaleHeight:
     :return:
     """
-    nZ = numberDensity * np.exp(-1*(z/scaleHeight))
+    nZ = numberDensity * np.exp(-1*(np.abs(z)/scaleHeight))
     return nZ
 
 
@@ -107,7 +107,7 @@ for i in range(len(alfvenVelocity)):
         corotationcheck.append(1)
 
 for r in np.arange(6, 100, 0.5):
-    for z in np.arange(0, 5, 0.1):
+    for z in np.arange(-5, 5, 0.1):
         radiusForZDensity.append(r)
         zInRJ.append(z)
         plasmaZDensity.append(densityAtZFromEquator(z, plasmaNumberDensity(r, 0), radialScaleHeight(r)))
