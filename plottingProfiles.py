@@ -1,6 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.interpolate import griddata
+from matplotlib import ticker, cm
 from matplotlib import colors
 
 # Loading the data
@@ -9,7 +10,7 @@ r, scaleHeight = np.loadtxt('scaleheighttest.txt', delimiter='\t', unpack=True)
 
 # Creating grid
 maxR = 30
-xtest = np.arange(-maxR, maxR+1, 1)
+xtest = np.arange(-maxR, maxR+1, 0.5)
 ytest = xtest
 xtest, ytest = np.meshgrid(xtest, ytest)
 
@@ -37,13 +38,12 @@ CheckGrid = griddata((x, y), corotationcheck, (xtest, ytest))
 CheckGrid[mask] = np.nan
 
 # Plotting
-# plt.subplot(121)
-# heatmap = plt.contourf(xtest, ytest, BGrid, cmap=plt.cm.get_cmap('gist_rainbow'), alpha=0.4)
+# plt.figure()
+# heatmap = plt.contourf(xtest, ytest, BGrid, cmap=plt.cm.get_cmap('gist_rainbow'), locator=ticker.LogLocator(), alpha=0.4)
 # lines = plt.contour(xtest, ytest, BGrid, 5, colors='k')
 # plt.clabel(lines, fontsize=18, inline=1, colors='k')
 # clb = plt.colorbar(heatmap)
 # clb.ax.set_title('B$_n$ (nT)', fontsize=18)
-# plt.title('Magnetic field of Jupiter', fontsize=18, wrap=True)
 # plt.rcParams['xtick.labelsize'] = 18
 # plt.rcParams['ytick.labelsize'] = 18
 # plt.xlabel('x $(R_J)$', fontsize=18)
@@ -51,6 +51,7 @@ CheckGrid[mask] = np.nan
 # #plt.axis(xlim=(np.amin(xtest), np.amax(xtest)), ylim=(np.amin(ytest), np.amax(ytest)))
 # plt.xticks(size=18)
 # plt.yticks(size=18)
+# plt.tight_layout()
 # plt.text(10, -70, r'$\rightarrow$ To the Sun')
 #
 # plt.subplot(122)

@@ -8,7 +8,7 @@ r, z, plasmaDensity = np.loadtxt('zPlasmaDensity.txt', delimiter='\t', unpack=Tr
 x, y, b, p, alfvenVelocity, corotation, corotationcheck = np.loadtxt('alfvenCheck.txt', delimiter='\t', unpack=True)
 
 maxR = 30
-xtest = np.arange(6, maxR+1, 1)
+xtest = np.arange(6, maxR+1, 0.5)
 ytest = np.arange(np.amin(z), np.amax(z), 0.1)
 xtest, ytest = np.meshgrid(xtest, ytest)
 
