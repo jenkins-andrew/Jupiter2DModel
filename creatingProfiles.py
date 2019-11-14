@@ -21,16 +21,6 @@ def plasmaNumberDensity(r, phi, species=None):
     :param species:
     :return: The plasma number density at the equator in cm^-3
     """
-    speciesList = {'e-': [1, 2451, -6.27, 4.21],
-                   'o+': [0.24, 592, -7.36, 0.368],
-                   'o++': [0.03, 76.3, -6.73, 0.086],
-                   's+': [0.07, 163, -6.81, 0.169],
-                   's++': [0.22, 538, -6.74, 0.598],
-                   's+++': [0.004, 90.7, -6.21, 0.165],
-                   'h+': [0.02, 50.6, -5.31, 0.212],
-                   'na+': [0.04, 97.2, -6.75, 0.106],
-                   'hoto+': [0.06, 134, -4.63, 1.057]}
-
     b2011 = 1987 * (r / 6) ** (-8.2) + 14 * (r / 6) ** (-3.2) + 0.05 * (r / 6) ** (-0.65)
 
     return b2011
@@ -44,7 +34,6 @@ def averagePlasmaNumberDensity(r, species):
     :param species:
     :return: The plasma number density at the equator in cm^-3
     """
-
     b2011 = 1987 * (r / 6) ** (-8.2) + 14 * (r / 6) ** (-3.2) + 0.05 * (r / 6) ** (-0.65)
     n = []
     for i in species:
@@ -59,20 +48,17 @@ def averagePlasmaNumberDensity(r, species):
     return averageN, n
 
 
-def averageAmu(numberdensity):
+def averageAmu(r, species, massAmuArray):
+    masses = []
+    sumofmasses = 0
+    averageN, N = averagePlasmaNumberDensity(r, species)
+    for i in massAmuArray:
+        masses.append(massAmuArray[i])
 
-    ME = 0.00054858  # electron mass in amu
-    MS1 = (32.065 - ME)  # S+
-    MS2 = 32.065 - (ME * 2)  # S++
-    MS3 = 32.065 - (ME * 3)  # S+++
-    MO1 = 15.999 - ME  # O+
-    MO2 = 15.999 - (ME * 2)  # O++
-    MNa1 = 22.989769 - ME  # Na+
-    MHO1 = 15.999 - (ME * 2)  # hot O+
-    MH1 = 1.00784 - (ME)  # H+
+    for i in range(len(N)):
+        sumofmasses += N[i] * masses[i]
 
-    amu = numberDensity
-
+    amu = sumofmasses/sum(N)
     return amu
 
 def alfvenVelocityFunc(b, n, amu = 20):
@@ -133,6 +119,9 @@ corotationVelocity = []
 corotationcheck = []
 plasmaZDensity = []
 radiusForZDensity = []
+amuAtR = []
+
+# For now these have to be in the same order!
 speciesList = {'e-': [1, 2451, -6.27, 4.21],
                'o+': [0.24, 592, -7.36, 0.368],
                'o++': [0.03, 76.3, -6.73, 0.086],
@@ -142,6 +131,19 @@ speciesList = {'e-': [1, 2451, -6.27, 4.21],
                'h+': [0.02, 50.6, -5.31, 0.212],
                'na+': [0.04, 97.2, -6.75, 0.106],
                'hoto+': [0.06, 134, -4.63, 1.057]}
+ME = 0.00054858
+speciesMass = {'e-': 0.00054858,
+               'o+': 15.999 - ME,
+               'o++': 15.999 - (ME * 2),
+               's+': 32.065 - ME,
+               's++': 32.065 - (ME * 2),
+               's+++': 32.065 - (ME * 3),
+               'h+': 1.00784 - ME,
+               'na+': 22.989769 - ME,
+               'hoto+': 15.999 - (ME * 2)
+               }
+
+print(averageAmu(7,speciesList,speciesMass))
 
 # Calculate radius, scale height, x, y, equatorial magnetic field and number density by iterating over radius and angle
 for r in np.arange(6, 150, 0.5):
