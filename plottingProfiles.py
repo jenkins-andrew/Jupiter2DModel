@@ -39,7 +39,7 @@ CheckGrid[mask] = np.nan
 
 # Plotting
 # plt.figure()
-# heatmap = plt.contourf(xtest, ytest, BGrid, cmap=plt.cm.get_cmap('gist_rainbow'), locator=ticker.LogLocator(), alpha=0.4)
+# heatmap = plt.contourf(xtest, ytest, BGrid, cmap=plt.cm.get_cmap('gist_rainbow'), alpha=0.4)
 # lines = plt.contour(xtest, ytest, BGrid, 5, colors='k')
 # plt.clabel(lines, fontsize=18, inline=1, colors='k')
 # clb = plt.colorbar(heatmap)
@@ -53,8 +53,8 @@ CheckGrid[mask] = np.nan
 # plt.yticks(size=18)
 # plt.tight_layout()
 # plt.text(10, -70, r'$\rightarrow$ To the Sun')
-#
-# plt.subplot(122)
+
+# plt.figure()
 # heatmap = plt.contourf(xtest, ytest, PGrid, cmap=plt.cm.get_cmap('gist_rainbow'), alpha=0.4)
 # lines = plt.contour(xtest, ytest, PGrid, 5, colors='k')
 # plt.clabel(lines, fontsize=18, inline=1, colors='k')
@@ -69,9 +69,7 @@ CheckGrid[mask] = np.nan
 # plt.xticks(size=18)
 # plt.yticks(size=18)
 # plt.text(10, -70, r'$\rightarrow$ To the Sun')
-#
 # plt.tight_layout(pad=1)
-# plt.savefig('contourwithmask.pdf', bbox_inches='tight')
 
 # plt.figure()
 # cmap = colors.ListedColormap(['red', '#ffffff'])
@@ -79,7 +77,6 @@ CheckGrid[mask] = np.nan
 # norm = colors.BoundaryNorm(boundaries, cmap.N, clip=True)
 # CheckGrid = griddata((x, y), corotationcheck, (xtest, ytest), method='linear')
 # CheckGrid[mask] = np.nan
-#
 # #heatmap = plt.contourf(xtest, ytest, CheckGrid, cmap=cmap)
 # heatmap = plt.contourf(xtest, ytest, CheckGrid, cmap=plt.cm.get_cmap('gist_rainbow'), alpha=0.4)
 # lines = plt.contour(xtest, ytest, CheckGrid, 1, colors='k')
@@ -89,7 +86,7 @@ CheckGrid[mask] = np.nan
 # plt.yticks(size=18)
 # plt.text(10, -70, r'$\rightarrow$ To the Sun')
 # plt.tight_layout()
-
+#
 # plt.figure()
 # alfvenmask = (alfvenVelocity > 0.95*corotation) & (alfvenVelocity < 1.05*corotation)
 # calculatedRadius = np.sqrt(x ** 2 + y ** 2)
@@ -112,8 +109,7 @@ plt.subplots_adjust(wspace=0.5, hspace=0.5)
 plt.tight_layout()
 ax = plt.subplot(221)
 heatmap = plt.contourf(xtest, ytest, AVGrid, cmap=plt.cm.get_cmap('gist_rainbow'), alpha=0.4)
-lines = plt.contour(xtest, ytest, AVGrid, 5, colors='k')
-plt.clabel(lines, inline=1, colors='k')
+lines = plt.contour(xtest, ytest, CheckGrid, 1, colors='k')
 Jupiter = plt.Circle((0, 0), radius=1, color='k')
 ax.add_artist(Jupiter)
 clb = plt.colorbar(heatmap)
