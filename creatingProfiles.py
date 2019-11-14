@@ -143,8 +143,6 @@ speciesMass = {'e-': 0.00054858,
                'hoto+': 15.999 - (ME * 2)
                }
 
-print(averageAmu(7,speciesList,speciesMass))
-
 # Calculate radius, scale height, x, y, equatorial magnetic field and number density by iterating over radius and angle
 for r in np.arange(6, 150, 0.5):
     radius.append(r)
@@ -153,11 +151,12 @@ for r in np.arange(6, 150, 0.5):
         x.append(r * np.cos(phi))
         y.append(r * np.sin(phi))
         equatorialMagField.append(equatorialMagneticField(r, phi))
-        numberDensity.append(plasmaNumberDensity(r, phi))
+        numberDensity.append(plasmaNumberDensity(r, phi, speciesList))
+        amuAtR.append(averageAmu(r, speciesList, speciesMass))
 
 # Calculate Alfven and corotational velocity
 for i in range(len(x)):
-    alfvenVelocity.append(alfvenVelocityFunc(equatorialMagField[i], numberDensity[i]))
+    alfvenVelocity.append(alfvenVelocityFunc(equatorialMagField[i], numberDensity[i], amuAtR[i]))
     corotationVelocity.append(corotationVelocityFunc(x[i], y[i]))
 
 # Check if Alfven velocity is greater than corotational, if so set a binary choice to 0
