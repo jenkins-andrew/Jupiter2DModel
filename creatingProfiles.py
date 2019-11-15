@@ -13,11 +13,10 @@ def equatorialMagneticField(r, phi):
     return B
 
 
-def equatorialPlasmaNumberDensity(r, phi, speciesValues=None):
+def equatorialPlasmaNumberDensity(r, speciesValues=None):
     """
     Calculates the plasma density at the equator using the method from Bagenal 2011
     :param r: The radius in R_J
-    :param phi: The angle in radians, 0 at the Sun, anti-clockwise. Not currently used
     :param speciesValues:
     :return: The plasma number density at the equator in cm^-3
     """
@@ -61,7 +60,7 @@ def averageAmu(r, species, massAmuArray):
     for i in massAmuArray:
         mass = massAmuArray[i]
         try:
-            n = equatorialPlasmaNumberDensity(r, 0, species[i])
+            n = equatorialPlasmaNumberDensity(r, species[i])
             N.append(n)
         except:
             n = 0
