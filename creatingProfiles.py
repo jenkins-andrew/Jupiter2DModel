@@ -151,7 +151,7 @@ for r in np.arange(6, 150, 0.5):
         x.append(r * np.cos(phi))
         y.append(r * np.sin(phi))
         equatorialMagField.append(equatorialMagneticField(r, phi))
-        numberDensity.append(plasmaNumberDensity(r, phi, speciesList))
+        numberDensity.append(averagePlasmaNumberDensity(r, speciesList)[0])  # Takes the first value from function
         amuAtR.append(averageAmu(r, speciesList, speciesMass))
 
 # Calculate Alfven and corotational velocity
