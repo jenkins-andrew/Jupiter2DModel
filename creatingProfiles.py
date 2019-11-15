@@ -13,7 +13,7 @@ def equatorialMagneticField(r, phi):
     return B
 
 
-def plasmaNumberDensity(r, phi, speciesValues=None):
+def equatorialPlasmaNumberDensity(r, phi, speciesValues=None):
     """
     Calculates the plasma density at the equator using the method from Bagenal 2011
     :param r: The radius in R_J
@@ -34,7 +34,7 @@ def plasmaNumberDensity(r, phi, speciesValues=None):
     return n
 
 
-def averagePlasmaNumberDensity(r, species):
+def equatorialAveragePlasmaNumberDensity(r, species):
     """
     Calculates the plasma density at the equator using the method from Bagenal 2011
     :param r: The radius in R_J
@@ -61,7 +61,7 @@ def averageAmu(r, species, massAmuArray):
     for i in massAmuArray:
         mass = massAmuArray[i]
         try:
-            n = plasmaNumberDensity(r, 0, species[i])
+            n = equatorialPlasmaNumberDensity(r, 0, species[i])
             N.append(n)
         except:
             n = 0
@@ -114,7 +114,7 @@ def densityAtZFromEquator(z, r, species):
     :return:
     """
 
-    nZ = averagePlasmaNumberDensity(r, species) * np.exp(-1*(np.abs(z)/radialScaleHeight(r)))
+    nZ = equatorialAveragePlasmaNumberDensity(r, species) * np.exp(-1 * (np.abs(z) / radialScaleHeight(r)))
     return nZ
 
 
@@ -163,7 +163,7 @@ for r in np.arange(6, 100, 0.5):
         x.append(r * np.cos(phi))
         y.append(r * np.sin(phi))
         equatorialMagField.append(equatorialMagneticField(r, phi))
-        numberDensity.append(averagePlasmaNumberDensity(r, speciesList))
+        numberDensity.append(equatorialAveragePlasmaNumberDensity(r, speciesList))
         amuAtR.append(averageAmu(r, speciesList, speciesMass))
 
 # Calculate Alfven and corotational velocity
