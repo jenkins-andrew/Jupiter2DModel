@@ -144,7 +144,7 @@ speciesMass = {'e-': 0.00054858,
                }
 
 # Calculate radius, scale height, x, y, equatorial magnetic field and number density by iterating over radius and angle
-for r in np.arange(6, 150, 0.5):
+for r in np.arange(6, 100, 0.5):
     radius.append(r)
     scaleHeight.append(radialScaleHeight(r))
     for phi in np.arange(0, 2 * np.pi + 0.03, 0.05):
@@ -171,7 +171,7 @@ for r in np.arange(6, 100, 0.5):
     for z in np.arange(-12, 12, 0.1):
         radiusForZDensity.append(r)
         zInRJ.append(z)
-        plasmaZDensity.append(densityAtZFromEquator(z, plasmaNumberDensity(r, 0), radialScaleHeight(r)))
+        plasmaZDensity.append(densityAtZFromEquator(z, averagePlasmaNumberDensity(r, speciesList)[0], radialScaleHeight(r)))
 
 # Save outputs
 np.savetxt('alfvenCheck.txt', np.c_[x, y, equatorialMagField, numberDensity, alfvenVelocity, corotationVelocity,
