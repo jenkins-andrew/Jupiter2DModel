@@ -10,12 +10,13 @@ r, scaleHeight = np.loadtxt('scaleheighttest.txt', delimiter='\t', unpack=True)
 
 # Creating grid
 maxR = 30
+minR = 6
 xtest = np.arange(-maxR, maxR+1, 0.5)
 ytest = xtest
 xtest, ytest = np.meshgrid(xtest, ytest)
 
 # Masking a circle of radius 20 R_J
-mask = (np.sqrt(xtest ** 2 + ytest ** 2) < 6) | (np.sqrt(xtest ** 2 + ytest ** 2) > maxR)
+mask = (np.sqrt(xtest ** 2 + ytest ** 2) < minR) | (np.sqrt(xtest ** 2 + ytest ** 2) > maxR)
 
 # Making the 3D grid for the magnetic field
 BGrid = griddata((x, y), b, (xtest, ytest))
@@ -65,11 +66,10 @@ CheckGrid[mask] = np.nan
 # plt.rcParams['ytick.labelsize'] = 18
 # plt.xlabel('x $(R_J)$', fontsize=18)
 # plt.ylabel('y $(R_J)$', fontsize=18)
-# #plt.axis(xlim=(np.amin(xtest), np.amax(xtest)), ylim=(np.amin(ytest), np.amax(ytest)))
 # plt.xticks(size=18)
 # plt.yticks(size=18)
 # plt.text(10, -70, r'$\rightarrow$ To the Sun')
-# plt.tight_layout(pad=1)
+# plt.tight_layout()
 
 # plt.figure()
 # cmap = colors.ListedColormap(['red', '#ffffff'])
@@ -152,7 +152,7 @@ phi = np.mod(phiwrong, 2*np.pi) * 180 / np.pi
 fit = np.poly1d(np.polyfit(phi[alfvenmask], calculatedRadius[alfvenmask], 3))
 plt.scatter(phi[alfvenmask], calculatedRadius[alfvenmask], s=0.1, color='k')
 fitrange = np.arange(0, 360, 1)
-#plt.plot(fit(fitrange))
+plt.plot(fit(fitrange))
 plt.title('Alfven Radius', fontsize=18, wrap=True)
 plt.xlabel('Angle (Degrees)', fontsize=18)
 plt.ylabel('Radius (R$_J)$', fontsize=18)
