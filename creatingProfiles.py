@@ -195,7 +195,7 @@ for r in np.arange(6, 100, 0.5):
 
 # Save outputs
 np.savetxt('alfvenCheck.txt', np.c_[xInRJ, yInRJ, equatorialMagField, numberDensity, alfvenVelocity, corotationVelocity,
-                                    corotationcheck, amuAtR], delimiter='\t', header='x\ty\tb\tp\tAlfven\tCorotation\tCheck')
+                                    corotationcheck], delimiter='\t', header='x\ty\tb\tp\tAlfven\tCorotation\tCheck')
 np.savetxt('scaleheighttest.txt', np.c_[radius, scaleHeight], delimiter='\t', header='r\tscaleHeight')
 
 np.savetxt('zPlasmaDensity.txt', np.c_[radiusForZDensity, zInRJ, plasmaZDensity], delimiter='\t', header='r\tz\tplasmaZDensity')

@@ -60,7 +60,7 @@ CheckGrid[mask] = np.nan
 # lines = plt.contour(xtest, ytest, PGrid, 5, colors='k')
 # plt.clabel(lines, fontsize=18, inline=1, colors='k')
 # clb = plt.colorbar(heatmap)
-# clb.ax.set_title(r'$\rho$ (cm$^{-3}$)', fontsize=18)
+# clb.ax.set_title(r'(cm$^{-3}$)', fontsize=18)
 # plt.title('Plasma density at Jupiter', fontsize=18, wrap=True)
 # plt.rcParams['xtick.labelsize'] = 18
 # plt.rcParams['ytick.labelsize'] = 18
