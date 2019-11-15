@@ -133,7 +133,7 @@ plasmaZDensity = []
 radiusForZDensity = []
 amuAtR = []
 
-# For now these have to be in the same order!
+# No longer have to be in the same order
 speciesList = {'e-': [1, 2451, -6.27, 4.21],
                'o+': [0.24, 592, -7.36, 0.368],
                'o++': [0.03, 76.3, -6.73, 0.086],
@@ -145,14 +145,14 @@ speciesList = {'e-': [1, 2451, -6.27, 4.21],
                'hoto+': [0.06, 134, -4.63, 1.057]}
 ME = 0.00054858
 speciesMass = {'e-': 0.00054858,
-               'o+': 15.999 - ME,
                'o++': 15.999 - (ME * 2),
                's+': 32.065 - ME,
                's++': 32.065 - (ME * 2),
                's+++': 32.065 - (ME * 3),
                'h+': 1.00784 - ME,
                'na+': 22.989769 - ME,
-               'hoto+': 15.999 - (ME * 2)
+               'hoto+': 15.999 - (ME * 2),
+               'o+': 15.999 - ME
                }
 
 # Calculate radius, scale height, x, y, equatorial magnetic field and number density by iterating over radius and angle
