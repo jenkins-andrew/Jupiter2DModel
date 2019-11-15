@@ -1,5 +1,6 @@
 import numpy as np
 
+
 def equatorialMagneticField(r, phi):
     """
     Finds the equatorial magnetic field strength using Vogt et. all 2011 method
@@ -55,6 +56,13 @@ def equatorialAveragePlasmaNumberDensity(r, species):
 
 
 def averageAmu(r, species, massAmuArray):
+    """
+
+    :param r:
+    :param species:
+    :param massAmuArray:
+    :return:
+    """
     sumofmasses = 0
     N = []
     for i in massAmuArray:
@@ -71,11 +79,12 @@ def averageAmu(r, species, massAmuArray):
     return amu
 
 
-def alfvenVelocityFunc(b, n, amu = 20):
+def alfvenVelocityFunc(b, n, amu=20):
     """
     Calculates the Alfven velocity for a given magnetic field strength and number density
     :param b: The equatorial magnetic field in nT
     :param n: The plasma number density at the equator in cm^-3
+    :param amu:
     :return: The Alfven Velocity in m/s
     """
     Va = b * 1e-9 / np.sqrt(1.25663706212e-6 * n * 1e6 * amu * 1.67e-27)
@@ -118,8 +127,8 @@ def densityAtZFromEquator(z, r, species):
 
 
 # Create a series of arrays to hold values
-x = []
-y = []
+xInRJ = []
+yInRJ = []
 zInRJ = []
 equatorialMagField = []
 numberDensity = []
@@ -159,16 +168,16 @@ for r in np.arange(6, 100, 0.5):
     radius.append(r)
     scaleHeight.append(radialScaleHeight(r))
     for phi in np.arange(0, 2 * np.pi + 0.03, 0.05):
-        x.append(r * np.cos(phi))
-        y.append(r * np.sin(phi))
+        xInRJ.append(r * np.cos(phi))
+        yInRJ.append(r * np.sin(phi))
         equatorialMagField.append(equatorialMagneticField(r, phi))
         numberDensity.append(equatorialAveragePlasmaNumberDensity(r, speciesList))
         amuAtR.append(averageAmu(r, speciesList, speciesMass))
 
 # Calculate Alfven and corotational velocity
-for i in range(len(x)):
+for i in range(len(xInRJ)):
     alfvenVelocity.append(alfvenVelocityFunc(equatorialMagField[i], numberDensity[i], amuAtR[i]))
-    corotationVelocity.append(corotationVelocityFunc(x[i], y[i]))
+    corotationVelocity.append(corotationVelocityFunc(xInRJ[i], yInRJ[i]))
 
 # Check if Alfven velocity is greater than corotational, if so set a binary choice to 0
 # will be used to create a plot later
@@ -185,7 +194,7 @@ for r in np.arange(6, 100, 0.5):
         plasmaZDensity.append(densityAtZFromEquator(z, r, speciesList))
 
 # Save outputs
-np.savetxt('alfvenCheck.txt', np.c_[x, y, equatorialMagField, numberDensity, alfvenVelocity, corotationVelocity,
+np.savetxt('alfvenCheck.txt', np.c_[xInRJ, yInRJ, equatorialMagField, numberDensity, alfvenVelocity, corotationVelocity,
                                     corotationcheck, amuAtR], delimiter='\t', header='x\ty\tb\tp\tAlfven\tCorotation\tCheck')
 np.savetxt('scaleheighttest.txt', np.c_[radius, scaleHeight], delimiter='\t', header='r\tscaleHeight')
 
