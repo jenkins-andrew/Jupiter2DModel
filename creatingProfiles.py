@@ -30,7 +30,6 @@ def averagePlasmaNumberDensity(r, species):
     """
     Calculates the plasma density at the equator using the method from Bagenal 2011
     :param r: The radius in R_J
-    :param phi: The angle in radians, 0 at the Sun, anti-clockwise. Not currently used
     :param species:
     :return: The plasma number density at the equator in cm^-3
     """
@@ -60,6 +59,7 @@ def averageAmu(r, species, massAmuArray):
 
     amu = sumofmasses/sum(N)
     return amu
+
 
 def alfvenVelocityFunc(b, n, amu = 20):
     """
@@ -94,15 +94,16 @@ def radialScaleHeight(r):
     return H
 
 
-def densityAtZFromEquator(z, numberDensity, scaleHeight):
+def densityAtZFromEquator(z, r, species):
     """
 
     :param z:
-    :param numberDensity:
-    :param scaleHeight:
+    :param r:
+    :param species:
     :return:
     """
-    nZ = numberDensity * np.exp(-1*(np.abs(z)/scaleHeight))
+
+    nZ = averagePlasmaNumberDensity(r, species)[0] * np.exp(-1*(np.abs(z)/radialScaleHeight(r)))
     return nZ
 
 
@@ -171,7 +172,7 @@ for r in np.arange(6, 100, 0.5):
     for z in np.arange(-12, 12, 0.1):
         radiusForZDensity.append(r)
         zInRJ.append(z)
-        plasmaZDensity.append(densityAtZFromEquator(z, averagePlasmaNumberDensity(r, speciesList)[0], radialScaleHeight(r)))
+        plasmaZDensity.append(densityAtZFromEquator(z, r, speciesList))
 
 # Save outputs
 np.savetxt('alfvenCheck.txt', np.c_[x, y, equatorialMagField, numberDensity, alfvenVelocity, corotationVelocity,
