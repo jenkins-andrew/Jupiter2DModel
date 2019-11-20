@@ -122,7 +122,7 @@ def densityAtZFromEquator(z, r, species):
     :return:
     """
 
-    nZ = equatorialAveragePlasmaNumberDensity(r, species) * np.exp(-1 * (np.abs(z) / radialScaleHeight(r))**2)
+    nZ = equatorialAveragePlasmaNumberDensity(r, species) * np.exp(-1 * (z / radialScaleHeight(r))**2)
     return nZ
 
 
