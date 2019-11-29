@@ -134,8 +134,8 @@ def radialVelocityFunc(r, species, massArray):
     :param massArray:
     :return:
     """
-    vr = 1000/(2 * equatorialAveragePlasmaNumberDensity(r, species)*1e6 * averageAmu(r, species, massArray)*1.67e-27 *
-               radialScaleHeight(r) * np.pi * r * 71492e3**2)
+    vr = 500/(2 * equatorialAveragePlasmaNumberDensity(r, species)*1e6 * averageAmu(r, species, massArray)*1.67e-27 *
+              radialScaleHeight(r) * np.pi * r * 71492e3**2)
     return vr
 
 
