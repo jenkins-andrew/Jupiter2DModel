@@ -126,6 +126,19 @@ def densityAtZFromEquator(z, r, species):
     return nZ
 
 
+def radialVelocityFunc(r, species, massArray):
+    """
+
+    :param r:
+    :param species:
+    :param massArray:
+    :return:
+    """
+    vr = 1000/(2 * equatorialAveragePlasmaNumberDensity(r, species)*1e6 * averageAmu(r, species, massArray)*1.67e-27 *
+               radialScaleHeight(r) * np.pi * r * 71492e3**2)
+    return vr
+
+
 # Create a series of arrays to hold values
 xInRJ = []
 yInRJ = []
@@ -140,6 +153,9 @@ corotationcheck = []
 plasmaZDensity = []
 radiusForZDensity = []
 amuAtR = []
+radialVelocity = []
+radialVelocityAtPi = []
+alfvenVelocityATPi = []
 
 # No longer have to be in the same order
 speciesList = {'e-': [1, 2451, -6.27, 4.21],
@@ -167,12 +183,15 @@ speciesMass = {'e-': 0.00054858,
 for r in np.arange(6, 100, 0.5):
     radius.append(r)
     scaleHeight.append(radialScaleHeight(r))
+    radialVelocityAtPi.append(radialVelocityFunc(r, speciesList, speciesMass))
+    alfvenVelocityATPi.append(alfvenVelocityFunc(equatorialMagneticField(r, 0), equatorialAveragePlasmaNumberDensity(r, speciesList), averageAmu(r, speciesList, speciesMass)))
     for phi in np.arange(0, 2 * np.pi + 0.03, 0.05):
         xInRJ.append(r * np.cos(phi))
         yInRJ.append(r * np.sin(phi))
         equatorialMagField.append(equatorialMagneticField(r, phi))
         numberDensity.append(equatorialAveragePlasmaNumberDensity(r, speciesList))
         amuAtR.append(averageAmu(r, speciesList, speciesMass))
+        radialVelocity.append(radialVelocityFunc(r, speciesList, speciesMass))
 
 # Calculate Alfven and corotational velocity
 for i in range(len(xInRJ)):
@@ -182,7 +201,7 @@ for i in range(len(xInRJ)):
 # Check if Alfven velocity is greater than corotational, if so set a binary choice to 0
 # will be used to create a plot later
 for i in range(len(alfvenVelocity)):
-    if alfvenVelocity[i] > corotationVelocity[i]:
+    if alfvenVelocity[i] > radialVelocity[i]:
         corotationcheck.append(0)
     else:
         corotationcheck.append(1)
@@ -194,8 +213,10 @@ for r in np.arange(6, 100, 0.5):
         plasmaZDensity.append(densityAtZFromEquator(z, r, speciesList))
 
 # Save outputs
-np.savetxt('alfvenCheck.txt', np.c_[xInRJ, yInRJ, equatorialMagField, numberDensity, alfvenVelocity, corotationVelocity,
+np.savetxt('alfvenCheck.txt', np.c_[xInRJ, yInRJ, equatorialMagField, numberDensity, alfvenVelocity, radialVelocity,
                                     corotationcheck], delimiter='\t', header='x\ty\tb\tp\tAlfven\tCorotation\tCheck')
 np.savetxt('scaleheighttest.txt', np.c_[radius, scaleHeight], delimiter='\t', header='r\tscaleHeight')
 
 np.savetxt('zPlasmaDensity.txt', np.c_[radiusForZDensity, zInRJ, plasmaZDensity], delimiter='\t', header='r\tz\tplasmaZDensity')
+
+np.savetxt('alfvenradial.txt', np.c_[radius, alfvenVelocityATPi, radialVelocityAtPi], delimiter='\t', header='r\tscaleHeight')
