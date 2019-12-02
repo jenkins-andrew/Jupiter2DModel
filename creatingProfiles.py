@@ -1,9 +1,10 @@
 import numpy as np
+from Magnetic_field_models import field_models
 
 
 def equatorialMagneticField(r, phi):
     """
-    Finds the equatorial magnetic field strength using Vogt et. all 2011 method
+    Finds the equatorial magnetic field strength using Vogt et. al 2011 method
     :param r: The radius in R_J
     :param phi: The angle in radians, 0 at the Sun, anti-clockwise
     :return: The equatorial magnetic field in nT
@@ -139,6 +140,23 @@ def radialVelocityFunc(r, species, massArray):
     return vr
 
 
+def magnitudeVector(x0, x1, x2):
+    """
+
+    :param x0:
+    :param x1:
+    :param x2:
+    :return:
+    """
+    vector = [x0, x1, x2]
+    return np.sqrt((np.square(vector)).sum())
+
+
+def averageMagField(fieldObject, r, theta, phi, model='VIP4'):
+    br, bt, bp = fieldObject.Internal_Field(r, theta, phi, model)
+    b = magnitudeVector(br, bt, bp)
+    return b
+
 # Create a series of arrays to hold values
 xInRJ = []
 yInRJ = []
@@ -179,12 +197,13 @@ speciesMass = {'e-': 0.00054858,
                'o+': 15.999 - ME
                }
 
+fieldGenerator = field_models()
 # Calculate radius, scale height, x, y, equatorial magnetic field and number density by iterating over radius and angle
 for r in np.arange(6, 100, 0.5):
     radius.append(r)
     scaleHeight.append(radialScaleHeight(r))
     radialVelocityAtPi.append(radialVelocityFunc(r, speciesList, speciesMass))
-    alfvenVelocityATPi.append(alfvenVelocityFunc(equatorialMagneticField(r, 0), equatorialAveragePlasmaNumberDensity(r, speciesList), averageAmu(r, speciesList, speciesMass)))
+    alfvenVelocityATPi.append(alfvenVelocityFunc(averageMagField(fieldGenerator, r, 0.5*np.pi, 0), equatorialAveragePlasmaNumberDensity(r, speciesList), averageAmu(r, speciesList, speciesMass)))
     for phi in np.arange(0, 2 * np.pi + 0.03, 0.05):
         xInRJ.append(r * np.cos(phi))
         yInRJ.append(r * np.sin(phi))
