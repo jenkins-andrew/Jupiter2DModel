@@ -35,7 +35,7 @@ def equatorialPlasmaNumberDensity(r, speciesValues=None):
     return n
 
 
-def equatorialAveragePlasmaNumberDensity(r, species):
+def equatorialTotalPlasmaNumberDensity(r, species):
     """
     Calculates the plasma density at the equator using the method from Bagenal 2011
     :param r: The radius in R_J
@@ -51,9 +51,9 @@ def equatorialAveragePlasmaNumberDensity(r, species):
         else:
             n.append(c * b2011)
 
-    averageN = np.mean(n)
+    totalN = np.sum(n)
 
-    return averageN
+    return totalN
 
 
 def averageAmu(r, species, massAmuArray):
@@ -123,7 +123,7 @@ def densityAtZFromEquator(z, r, species):
     :return:
     """
 
-    nZ = equatorialAveragePlasmaNumberDensity(r, species) * np.exp(-1 * (z / radialScaleHeight(r))**2)
+    nZ = equatorialTotalPlasmaNumberDensity(r, species) * np.exp(-1 * (z / radialScaleHeight(r)) ** 2)
     return nZ
 
 
@@ -135,8 +135,8 @@ def radialVelocityFunc(r, species, massArray):
     :param massArray:
     :return:
     """
-    vr = 500/(2 * equatorialAveragePlasmaNumberDensity(r, species)*1e6 * averageAmu(r, species, massArray)*1.67e-27 *
-              radialScaleHeight(r) * np.pi * r * 71492e3**2)
+    vr = 500/(2 * equatorialTotalPlasmaNumberDensity(r, species) * 1e6 * averageAmu(r, species, massArray) * 1.67e-27 *
+              radialScaleHeight(r) * np.pi * r * 71492e3 ** 2)
     return vr
 
 
@@ -204,12 +204,12 @@ for r in np.arange(6, 100, 0.5):
     radius.append(r)
     scaleHeight.append(radialScaleHeight(r))
     radialVelocityAtPi.append(radialVelocityFunc(r, speciesList, speciesMass))
-    alfvenVelocityATPi.append(alfvenVelocityFunc(equatorialMagneticField(r, 0), equatorialAveragePlasmaNumberDensity(r, speciesList), averageAmu(r, speciesList, speciesMass)))
+    alfvenVelocityATPi.append(alfvenVelocityFunc(equatorialMagneticField(r, np.pi), equatorialTotalPlasmaNumberDensity(r, speciesList), averageAmu(r, speciesList, speciesMass)))
     for phi in np.arange(0, 2 * np.pi + 0.03, 0.05):
         xInRJ.append(r * np.cos(phi))
         yInRJ.append(r * np.sin(phi))
         equatorialMagField.append(equatorialMagneticField(r, phi))
-        numberDensity.append(equatorialAveragePlasmaNumberDensity(r, speciesList))
+        numberDensity.append(equatorialTotalPlasmaNumberDensity(r, speciesList))
         amuAtR.append(averageAmu(r, speciesList, speciesMass))
         radialVelocity.append(radialVelocityFunc(r, speciesList, speciesMass))
 
