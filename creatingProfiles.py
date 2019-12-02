@@ -80,7 +80,7 @@ def averageAmu(r, species, massAmuArray):
     return amu
 
 
-def alfvenVelocityFunc(b, n, amu=20):
+def alfvenVelocityFunc(b, n, amu):
     """
     Calculates the Alfven velocity for a given magnetic field strength and number density
     :param b: The equatorial magnetic field in nT
@@ -157,6 +157,7 @@ def averageMagField(fieldObject, r, theta, phi, model='VIP4'):
     b = magnitudeVector(br, bt, bp)
     return b
 
+
 # Create a series of arrays to hold values
 xInRJ = []
 yInRJ = []
@@ -203,7 +204,7 @@ for r in np.arange(6, 100, 0.5):
     radius.append(r)
     scaleHeight.append(radialScaleHeight(r))
     radialVelocityAtPi.append(radialVelocityFunc(r, speciesList, speciesMass))
-    alfvenVelocityATPi.append(alfvenVelocityFunc(averageMagField(fieldGenerator, r, 0.5*np.pi, 0), equatorialAveragePlasmaNumberDensity(r, speciesList), averageAmu(r, speciesList, speciesMass)))
+    alfvenVelocityATPi.append(alfvenVelocityFunc(equatorialMagneticField(r, 0), equatorialAveragePlasmaNumberDensity(r, speciesList), averageAmu(r, speciesList, speciesMass)))
     for phi in np.arange(0, 2 * np.pi + 0.03, 0.05):
         xInRJ.append(r * np.cos(phi))
         yInRJ.append(r * np.sin(phi))
