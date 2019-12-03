@@ -232,7 +232,7 @@ fieldGenerator = field_models()
 # Calculate radius, scale height, x, y, equatorial magnetic field, Alfven and radial velocity
 # and number density by iterating over radius and angle
 for r in np.arange(6, 100, 0.5):
-    # radius.append(r)
+    radius.append(r)
     # scaleHeight.append(radialScaleHeight(r)) # No longer needed
     radialVelocityAtPi.append(radialVelocityFunc(r, speciesList, speciesMass))
     alfvenVelocityATPi.append(alfvenVelocityAtRThetaPhi(r, 0, speciesMass, speciesMass))
