@@ -85,7 +85,7 @@ def totalMassDensity(r, species, massAmuArray):
 
     :param r: radius in R_J
     :param species:
-    :param massAmuArray:
+    :param massAmuArray: in AMU
     :return: Mass in kg
     """
     M = 0
@@ -99,18 +99,6 @@ def totalMassDensity(r, species, massAmuArray):
         M += n*1e6 * mass*1.67e-27
 
     return M
-
-
-def alfvenVelocityFunc(b, n, amu):
-    """
-    Calculates the Alfven velocity for a given magnetic field strength and number density
-    :param b: The equatorial magnetic field in nT
-    :param n: The plasma number density at the equator in cm^-3
-    :param amu:
-    :return: The Alfven Velocity in m/s
-    """
-    Va = b * 1e-9 / np.sqrt(1.25663706212e-6 * n * 1e6 * amu * 1.67e-27)
-    return Va
 
 
 def alfvenVelocityAtRThetaPhi(r, phi, species, massArray):
@@ -189,6 +177,15 @@ def magnitudeVector(x0, x1, x2):
 
 
 def averageMagField(fieldObject, r, theta, phi, model='VIP4'):
+    """
+
+    :param fieldObject:
+    :param r:
+    :param theta:
+    :param phi:
+    :param model:
+    :return:
+    """
     br, bt, bp = fieldObject.Internal_Field(r, theta, phi, model)
     b = magnitudeVector(br, bt, bp)
     return b
@@ -200,14 +197,11 @@ yInRJ = []
 zInRJ = []
 equatorialMagField = []
 numberDensity = []
-scaleHeight = []
 radius = []
 alfvenVelocity = []
-corotationVelocity = []
-corotationcheck = []
+alfvenPointCheck = []
 plasmaZDensity = []
 radiusForZDensity = []
-amuAtR = []
 radialVelocity = []
 radialVelocityAtPi = []
 alfvenVelocityATPi = []
@@ -235,10 +229,11 @@ speciesMass = {'e-': 0.00054858,
                }
 
 fieldGenerator = field_models()
-# Calculate radius, scale height, x, y, equatorial magnetic field and number density by iterating over radius and angle
+# Calculate radius, scale height, x, y, equatorial magnetic field, Alfven and radial velocity
+# and number density by iterating over radius and angle
 for r in np.arange(6, 100, 0.5):
-    radius.append(r)
-    scaleHeight.append(radialScaleHeight(r))
+    # radius.append(r)
+    # scaleHeight.append(radialScaleHeight(r)) # No longer needed
     radialVelocityAtPi.append(radialVelocityFunc(r, speciesList, speciesMass))
     alfvenVelocityATPi.append(alfvenVelocityAtRThetaPhi(r, 0, speciesMass, speciesMass))
     for phi in np.arange(0, 2 * np.pi + 0.03, 0.05):
@@ -246,22 +241,17 @@ for r in np.arange(6, 100, 0.5):
         yInRJ.append(r * np.sin(phi))
         equatorialMagField.append(equatorialMagneticField(r, phi))
         numberDensity.append(equatorialTotalPlasmaNumberDensity(r, speciesList))
-        amuAtR.append(averageAmu(r, speciesList, speciesMass))
         radialVelocity.append(radialVelocityFunc(r, speciesList, speciesMass))
         alfvenVelocity.append(alfvenVelocityAtRThetaPhi(r, phi, speciesList, speciesMass))
 
-# Calculate Alfven and corotational velocity
-# for i in range(len(xInRJ)):
-#     alfvenVelocity.append(alfvenVelocityFunc(equatorialMagField[i], numberDensity[i], amuAtR[i]))
-#     corotationVelocity.append(corotationVelocityFunc(xInRJ[i], yInRJ[i]))
 
-# Check if Alfven velocity is greater than corotational, if so set a binary choice to 0
+# Check if Alfven velocity is greater than radial, if so set a binary choice to 0
 # will be used to create a plot later
 for i in range(len(alfvenVelocity)):
     if alfvenVelocity[i] > radialVelocity[i]:
-        corotationcheck.append(0)
+        alfvenPointCheck.append(0)
     else:
-        corotationcheck.append(1)
+        alfvenPointCheck.append(1)
 
 for r in np.arange(6, 100, 0.5):
     for z in np.arange(-12, 12, 0.1):
@@ -271,8 +261,9 @@ for r in np.arange(6, 100, 0.5):
 
 # Save outputs
 np.savetxt('alfvenCheck.txt', np.c_[xInRJ, yInRJ, equatorialMagField, numberDensity, alfvenVelocity, radialVelocity,
-                                    corotationcheck], delimiter='\t', header='x\ty\tb\tp\tAlfven\tCorotation\tCheck')
-np.savetxt('scaleheighttest.txt', np.c_[radius, scaleHeight], delimiter='\t', header='r\tscaleHeight')
+                                    alfvenPointCheck], delimiter='\t', header='x\ty\tb\tp\tAlfven\tCorotation\tCheck')
+# np.savetxt('scaleheighttest.txt', np.c_[radius, scaleHeight], delimiter='\t', header='r\tscaleHeight')
+# No longer needed
 
 np.savetxt('zPlasmaDensity.txt', np.c_[radiusForZDensity, zInRJ, plasmaZDensity], delimiter='\t', header='r\tz\tplasmaZDensity')
 
