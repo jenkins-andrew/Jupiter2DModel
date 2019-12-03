@@ -80,6 +80,27 @@ def averageAmu(r, species, massAmuArray):
     return amu
 
 
+def totalMassDensity(r, species, massAmuArray):
+    """
+
+    :param r: radius in R_J
+    :param species:
+    :param massAmuArray:
+    :return: Mass in kg
+    """
+    M = 0
+    for i in massAmuArray:
+        mass = massAmuArray[i]
+        try:
+            n = equatorialPlasmaNumberDensity(r, species[i])
+        except:
+            n = 0
+            print('Species do not match')
+        M += n*1e6 * mass*1.67e-27
+
+    return M
+
+
 def alfvenVelocityFunc(b, n, amu):
     """
     Calculates the Alfven velocity for a given magnetic field strength and number density
