@@ -113,6 +113,21 @@ def alfvenVelocityFunc(b, n, amu):
     return Va
 
 
+def alfvenVelocityAtRThetaPhi(r, phi, species, massArray):
+    """
+
+    :param r:
+    :param phi:
+    :param species:
+    :param massArray:
+    :return:
+    """
+
+    Va = equatorialMagneticField(r, phi) * 1e-9 / np.sqrt(1.25663706212e-6 * totalMassDensity(r, species, massArray))
+
+    return Va
+
+
 def corotationVelocityFunc(x, y):
     """
     Calculate the corotational velocity at x and y
@@ -156,7 +171,7 @@ def radialVelocityFunc(r, species, massArray):
     :param massArray:
     :return:
     """
-    vr = 500/(2 * equatorialTotalPlasmaNumberDensity(r, species) * 1e6 * averageAmu(r, species, massArray) * 1.67e-27 *
+    vr = 500/(2 * totalMassDensity(r, species, massArray) *
               radialScaleHeight(r) * np.pi * r * 71492e3 ** 2)
     return vr
 
@@ -225,7 +240,7 @@ for r in np.arange(6, 100, 0.5):
     radius.append(r)
     scaleHeight.append(radialScaleHeight(r))
     radialVelocityAtPi.append(radialVelocityFunc(r, speciesList, speciesMass))
-    alfvenVelocityATPi.append(alfvenVelocityFunc(equatorialMagneticField(r, np.pi), equatorialTotalPlasmaNumberDensity(r, speciesList), averageAmu(r, speciesList, speciesMass)))
+    alfvenVelocityATPi.append(alfvenVelocityAtRThetaPhi(r, 0, speciesMass, speciesMass))
     for phi in np.arange(0, 2 * np.pi + 0.03, 0.05):
         xInRJ.append(r * np.cos(phi))
         yInRJ.append(r * np.sin(phi))
@@ -233,11 +248,12 @@ for r in np.arange(6, 100, 0.5):
         numberDensity.append(equatorialTotalPlasmaNumberDensity(r, speciesList))
         amuAtR.append(averageAmu(r, speciesList, speciesMass))
         radialVelocity.append(radialVelocityFunc(r, speciesList, speciesMass))
+        alfvenVelocity.append(alfvenVelocityAtRThetaPhi(r, phi, speciesList, speciesMass))
 
 # Calculate Alfven and corotational velocity
-for i in range(len(xInRJ)):
-    alfvenVelocity.append(alfvenVelocityFunc(equatorialMagField[i], numberDensity[i], amuAtR[i]))
-    corotationVelocity.append(corotationVelocityFunc(xInRJ[i], yInRJ[i]))
+# for i in range(len(xInRJ)):
+#     alfvenVelocity.append(alfvenVelocityFunc(equatorialMagField[i], numberDensity[i], amuAtR[i]))
+#     corotationVelocity.append(corotationVelocityFunc(xInRJ[i], yInRJ[i]))
 
 # Check if Alfven velocity is greater than corotational, if so set a binary choice to 0
 # will be used to create a plot later
