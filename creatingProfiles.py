@@ -86,7 +86,7 @@ def totalMassDensity(r, species, massAmuArray):
     :param r: radius in R_J
     :param species:
     :param massAmuArray: in AMU
-    :return: Mass in kg
+    :return: Mass Density in kg/m^3
     """
     M = 0
     for i in massAmuArray:
