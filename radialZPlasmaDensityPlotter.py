@@ -4,8 +4,7 @@ from matplotlib import ticker, cm
 from scipy.interpolate import griddata
 
 
-r, z, plasmaDensity = np.loadtxt('zPlasmaDensity.txt', delimiter='\t', unpack=True)
-x, y, b, p, alfvenVelocity, corotation, corotationcheck = np.loadtxt('alfvenCheck.txt', delimiter='\t', unpack=True)
+r, z, plasmaDensity, radialVelocityAtZ, alfvenVelocityAtZ = np.loadtxt('zPlasmaDensity.txt', delimiter='\t', unpack=True)
 xB, yB, zB, BB = np.loadtxt('plotmagfieldlines.txt', delimiter='\t', unpack=True)
 
 
@@ -23,6 +22,8 @@ maskedFieldLines = (np.abs(xB) > 6)
 
 DensityGrid = griddata((r[mask], z[mask]), plasmaDensity[mask], (xtest, ytest))
 FieldGrid = griddata((xB, zB), BB, (xtest, ytest))
+radialGrid = griddata((r, z), radialVelocityAtZ, (xtest, ytest))
+alfvenGrid = griddata((r, z), alfvenVelocityAtZ, (xtest, ytest))
 
 
 
@@ -30,7 +31,7 @@ plt.figure()
 plt.rcParams['xtick.labelsize'] = 18
 plt.rcParams['ytick.labelsize'] = 18
 heatmap = plt.contourf(xtest, ytest, DensityGrid, cmap=plt.cm.get_cmap('gist_rainbow'), locator=ticker.LogLocator(), alpha=0.4)
-plt.plot(xB[maskedFieldLines], zB[maskedFieldLines], 'k')
+plt.plot(xB, zB, 'k')
 # lines = plt.contour(xtest, ytest, FieldGrid, 10, colors='k')
 # plt.clabel(lines, fontsize=18, inline=1, colors='k')
 clb = plt.colorbar(heatmap)
@@ -39,8 +40,38 @@ plt.xlabel('R $(R_J)$', fontsize=18)
 plt.ylabel('Z $(R_J)$', fontsize=18)
 plt.xticks(size=18)
 plt.yticks(size=18)
-plt.ylim(np.amin(z), np.amax(z))
+plt.ylim(np.amin(zB), np.amax(zB))
 
 plt.tight_layout()
+
+plt.figure()
+plt.rcParams['xtick.labelsize'] = 18
+plt.rcParams['ytick.labelsize'] = 18
+plt.subplots_adjust(wspace=0.5, hspace=0.5)
+plt.tight_layout()
+
+ax = plt.subplot(211)
+heatmap = plt.contourf(xtest, ytest, alfvenGrid, cmap=plt.cm.get_cmap('gist_rainbow'), locator=ticker.LogLocator(), alpha=0.4)
+lines = plt.contour(xtest, ytest, alfvenGrid, 10, colors='k')
+plt.clabel(lines, fontsize=18, inline=1, colors='k')
+clb = plt.colorbar(heatmap)
+clb.ax.set_title(r'(kms$^{-1}$)', fontsize=18)
+plt.xlabel('R $(R_J)$', fontsize=18)
+plt.ylabel('Z $(R_J)$', fontsize=18)
+plt.xticks(size=18)
+plt.yticks(size=18)
+plt.ylim(np.amin(zB), np.amax(zB))
+
+ax = plt.subplot(212)
+heatmap = plt.contourf(xtest, ytest, radialGrid, cmap=plt.cm.get_cmap('gist_rainbow'), locator=ticker.LogLocator(), alpha=0.4)
+lines = plt.contour(xtest, ytest, radialGrid, 10, colors='k')
+plt.clabel(lines, fontsize=18, inline=1, colors='k')
+clb = plt.colorbar(heatmap)
+clb.ax.set_title(r'(kms$^{-1}$)', fontsize=18)
+plt.xlabel('R $(R_J)$', fontsize=18)
+plt.ylabel('Z $(R_J)$', fontsize=18)
+plt.xticks(size=18)
+plt.yticks(size=18)
+plt.ylim(np.amin(zB), np.amax(zB))
 
 plt.show()
