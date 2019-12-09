@@ -101,7 +101,7 @@ def totalMassDensity(r, species, massAmuArray):
     return M
 
 
-def alfvenVelocityAtRThetaPhi(r, phi, species, massArray):
+def alfvenVelocityAtRPhi(r, phi, species, massArray):
     """
 
     :param r:
@@ -112,6 +112,24 @@ def alfvenVelocityAtRThetaPhi(r, phi, species, massArray):
     """
 
     Va = equatorialMagneticField(r, phi) * 1e-9 / np.sqrt(1.25663706212e-6 * totalMassDensity(r, species, massArray))
+
+    return Va
+
+
+def alfvenVelocityAtRThetaPhi(fieldModel, r, theta, phi, species, massArray, model='VIP4'):
+    """
+
+    :param fieldModel:
+    :param r:
+    :param theta:
+    :param phi:
+    :param species:
+    :param massArray:
+    :param model:
+    :return:
+    """
+
+    Va = averageMagFieldModel(fieldModel, r, theta, phi, model) * 1e-9 / np.sqrt(1.25663706212e-6 * totalMassDensity(r, species, massArray))
 
     return Va
 
@@ -151,6 +169,20 @@ def densityAtZFromEquator(z, r, species):
     return nZ
 
 
+def massDensityAtZFromEquator(r, z, species, massArray):
+    """
+
+    :param z:
+    :param r:
+    :param species:
+    :param massArray:
+    :return:
+    """
+
+    mZ = totalMassDensity(r, species, massArray) * np.exp(-1 * (z / radialScaleHeight(r)) ** 2)
+    return mZ
+
+
 def radialVelocityFunc(r, species, massArray):
     """
 
@@ -160,6 +192,19 @@ def radialVelocityFunc(r, species, massArray):
     :return:
     """
     vr = 500/(2 * totalMassDensity(r, species, massArray) *
+              radialScaleHeight(r) * np.pi * r * 71492e3 ** 2)
+    return vr
+
+
+def radialVelocityFuncAtZ(r, z, species, massArray):
+    """
+
+    :param r:
+    :param species:
+    :param massArray:
+    :return:
+    """
+    vr = 500/(2 * massDensityAtZFromEquator(r, z, species, massArray) *
               radialScaleHeight(r) * np.pi * r * 71492e3 ** 2)
     return vr
 
@@ -176,7 +221,7 @@ def magnitudeVector(x0, x1, x2):
     return np.sqrt((np.square(vector)).sum())
 
 
-def averageMagField(fieldObject, r, theta, phi, model='VIP4'):
+def averageMagFieldModel(fieldObject, r, theta, phi, model='VIP4'):
     """
 
     :param fieldObject:
@@ -205,6 +250,8 @@ radiusForZDensity = []
 radialVelocity = []
 radialVelocityAtPi = []
 alfvenVelocityATPi = []
+radialVelocityAtZ = []
+alfvenVelocityAtZ = []
 
 # No longer have to be in the same order
 speciesList = {'e-': [1, 2451, -6.27, 4.21],
@@ -235,14 +282,14 @@ for r in np.arange(6, 100, 0.5):
     radius.append(r)
     # scaleHeight.append(radialScaleHeight(r)) # No longer needed
     radialVelocityAtPi.append(radialVelocityFunc(r, speciesList, speciesMass))
-    alfvenVelocityATPi.append(alfvenVelocityAtRThetaPhi(r, 0, speciesMass, speciesMass))
+    alfvenVelocityATPi.append(alfvenVelocityAtRPhi(r, 0, speciesMass, speciesMass))
     for phi in np.arange(0, 2 * np.pi + 0.03, 0.05):
         xInRJ.append(r * np.cos(phi))
         yInRJ.append(r * np.sin(phi))
         equatorialMagField.append(equatorialMagneticField(r, phi))
         numberDensity.append(equatorialTotalPlasmaNumberDensity(r, speciesList))
         radialVelocity.append(radialVelocityFunc(r, speciesList, speciesMass))
-        alfvenVelocity.append(alfvenVelocityAtRThetaPhi(r, phi, speciesList, speciesMass))
+        alfvenVelocity.append(alfvenVelocityAtRPhi(r, phi, speciesList, speciesMass))
 
 
 # Check if Alfven velocity is greater than radial, if so set a binary choice to 0
@@ -255,9 +302,13 @@ for i in range(len(alfvenVelocity)):
 
 for r in np.arange(6, 100, 0.5):
     for z in np.arange(-12, 12, 0.1):
+        theta = np.arctan2(z, r)
         radiusForZDensity.append(r)
         zInRJ.append(z)
         plasmaZDensity.append(densityAtZFromEquator(z, r, speciesList))
+        radialVelocityAtZ.append(radialVelocityFuncAtZ(r, z, speciesList, speciesMass))
+        alfvenVelocityAtZ.append(alfvenVelocityAtRThetaPhi(fieldGenerator, r, theta, 0, speciesMass, speciesMass))
+
 
 # Save outputs
 np.savetxt('alfvenCheck.txt', np.c_[xInRJ, yInRJ, equatorialMagField, numberDensity, alfvenVelocity, radialVelocity,
@@ -265,6 +316,6 @@ np.savetxt('alfvenCheck.txt', np.c_[xInRJ, yInRJ, equatorialMagField, numberDens
 # np.savetxt('scaleheighttest.txt', np.c_[radius, scaleHeight], delimiter='\t', header='r\tscaleHeight')
 # No longer needed
 
-np.savetxt('zPlasmaDensity.txt', np.c_[radiusForZDensity, zInRJ, plasmaZDensity], delimiter='\t', header='r\tz\tplasmaZDensity')
+np.savetxt('zPlasmaDensity.txt', np.c_[radiusForZDensity, zInRJ, plasmaZDensity, radialVelocityAtZ, alfvenVelocityAtZ], delimiter='\t', header='r\tz\tplasmaZDensity')
 
 np.savetxt('alfvenradial.txt', np.c_[radius, alfvenVelocityATPi, radialVelocityAtPi], delimiter='\t', header='r\tscaleHeight')
