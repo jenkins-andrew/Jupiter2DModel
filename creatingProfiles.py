@@ -2,6 +2,7 @@ import numpy as np
 from Magnetic_field_models import field_models
 
 
+
 def equatorialMagneticField(r, phi):
     """
     Finds the equatorial magnetic field strength using Vogt et. al 2011 method
@@ -231,7 +232,7 @@ def averageMagFieldModel(fieldObject, r, theta, phi, model='VIP4'):
     :param model:
     :return:
     """
-    br, bt, bp = fieldObject.Internal_Field(r, theta, phi, model)
+    br, bt, bp, bx, by, bz = fieldObject.Internal_Field(r, theta, phi, False, model)
     b = magnitudeVector(br, bt, bp)
     return b
 
