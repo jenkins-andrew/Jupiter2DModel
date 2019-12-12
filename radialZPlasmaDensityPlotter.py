@@ -5,7 +5,7 @@ from scipy.interpolate import griddata
 
 
 r, z, plasmaDensity, radialVelocityAtZ, alfvenVelocityAtZ = np.loadtxt('zPlasmaDensity.txt', delimiter='\t', unpack=True)
-xB, yB, zB, BB = np.loadtxt('plotmagfieldlines.txt', delimiter='\t', unpack=True)
+xB, yB, zB, BB = np.loadtxt('radius6.00to100.00phi0.00CurrentOn=False.txt', delimiter='\t', unpack=True)
 
 
 maxR = 100
@@ -13,9 +13,9 @@ xtest = np.arange(6, maxR+1, 0.5)
 ytest = np.arange(np.amin(z), np.amax(z), 0.1)
 xtest, ytest = np.meshgrid(xtest, ytest)
 
-theta = -10*np.pi/180
-xB = xB*np.cos(theta) - zB*np.sin(theta)
-zB = xB*np.sin(theta) + zB*np.cos(theta)
+# theta = -10*np.pi/180
+# xB = xB*np.cos(theta) - zB*np.sin(theta)
+# zB = xB*np.sin(theta) + zB*np.cos(theta)
 
 mask = (plasmaDensity > 10**(-1))
 maskedFieldLines = (np.abs(xB) > 6)
@@ -34,7 +34,7 @@ plt.figure()
 plt.rcParams['xtick.labelsize'] = 18
 plt.rcParams['ytick.labelsize'] = 18
 heatmap = plt.contourf(xtest, ytest, DensityGrid, cmap=plt.cm.get_cmap('gist_rainbow'), locator=ticker.LogLocator(), alpha=0.4)
-plt.plot(xB, zB, 'k')
+plt.plot(xB, zB, '--k')
 # lines = plt.contour(xtest, ytest, FieldGrid, 10, colors='k')
 # plt.clabel(lines, fontsize=18, inline=1, colors='k')
 clb = plt.colorbar(heatmap)
